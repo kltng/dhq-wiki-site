@@ -40,6 +40,12 @@ export const CrawlLinks: QuartzTransformerPlugin<Partial<Options>> = (userOpts) 
       return [
         () => {
           return (tree: Root, file) => {
+            // Citation stub pages have no outgoing links — skip the entire tree walk.
+            if (file.data.slug?.startsWith("citations/")) {
+              file.data.links = []
+              return
+            }
+
             const curSlug = simplifySlug(file.data.slug!)
             const outgoing: Set<SimpleSlug> = new Set()
 

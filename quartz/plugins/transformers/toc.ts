@@ -33,6 +33,11 @@ export const TableOfContents: QuartzTransformerPlugin<Partial<Options>> = (userO
       return [
         () => {
           return async (tree: Root, file) => {
+            // Citation stub pages are too short to need a TOC — skip heading traversal.
+            if (file.data.slug?.startsWith("citations/")) {
+              return
+            }
+
             const display = file.data.frontmatter?.enableToc ?? opts.showByDefault
             if (display) {
               slugAnchor.reset()

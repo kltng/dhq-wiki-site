@@ -10,7 +10,7 @@ const config: QuartzConfig = {
     pageTitle: "DHQ Wiki",
     pageTitleSuffix: " — Digital Humanities Quarterly",
     enableSPA: true,
-    enablePopovers: true,
+    enablePopovers: false, // Disabled: 22K pages makes popover prefetching expensive
     analytics: null,
     locale: "en-US",
     baseUrl: "kltng.github.io",
@@ -56,19 +56,13 @@ const config: QuartzConfig = {
       Plugin.CreatedModifiedDate({
         priority: ["frontmatter", "filesystem"],
       }),
-      Plugin.SyntaxHighlighting({
-        theme: {
-          light: "github-light",
-          dark: "github-dark",
-        },
-        keepBackground: false,
-      }),
+      // SyntaxHighlighting removed: Shiki is expensive per-page and DHQ content rarely has code blocks
       Plugin.ObsidianFlavoredMarkdown({ enableInHtmlEmbed: false }),
       Plugin.GitHubFlavoredMarkdown(),
       Plugin.TableOfContents(),
       Plugin.CrawlLinks({ markdownLinkResolution: "shortest" }),
       Plugin.Description(),
-      Plugin.Latex({ renderEngine: "katex" }),
+      // Latex removed: DHQ is a humanities journal; math notation is rare across 22K pages
     ],
     filters: [Plugin.RemoveDrafts()],
     emitters: [
@@ -76,10 +70,10 @@ const config: QuartzConfig = {
       Plugin.ComponentResources(),
       Plugin.ContentPage(),
       Plugin.FolderPage(),
-      // Plugin.TagPage(), // Disabled: 21K citations create tags that exceed filesystem filename limits (ENAMETOOLONG)
+      Plugin.TagPage(),
       Plugin.ContentIndex({
         enableSiteMap: true,
-        enableRSS: true,
+        enableRSS: false, // Disabled: RSS feed not needed for wiki; saves serialization of 22K entries
       }),
       Plugin.Assets(),
       Plugin.Static(),

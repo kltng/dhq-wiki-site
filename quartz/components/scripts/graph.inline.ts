@@ -97,7 +97,12 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   )
   const links: SimpleLinkData[] = []
   const tags: SimpleSlug[] = []
-  const validLinks = new Set(data.keys())
+
+  // Exclude citation pages from the graph to keep it navigable with 22K+ pages.
+  // Citations are stub pages that would overwhelm the force simulation.
+  const validLinks = new Set(
+    [...data.keys()].filter((slug) => !slug.startsWith("citations/")),
+  )
 
   const tweens = new Map<string, TweenNode>()
   for (const [source, details] of data.entries()) {

@@ -17,13 +17,27 @@ interface TagPageOptions extends FullPageLayout {
   sort?: (f1: QuartzPluginData, f2: QuartzPluginData) => number
 }
 
+// Truncate tag slugs to stay within filesystem filename limits (255 bytes on Linux/macOS).
+// If a tag exceeds the limit, truncate and append a short hash for uniqueness.
+const MAX_TAG_SLUG_LENGTH = 200 // leave room for "tags/" prefix and "/index.html"
+function safeTagSlug(tag: string): string {
+  if (tag.length <= MAX_TAG_SLUG_LENGTH) return tag
+  const hash = Array.from(tag).reduce((h, c) => ((h << 5) - h + c.charCodeAt(0)) | 0, 0)
+  const hashStr = Math.abs(hash).toString(36).slice(0, 8)
+  return tag.slice(0, MAX_TAG_SLUG_LENGTH - 9) + "-" + hashStr
+}
+
 function computeTagInfo(
   allFiles: QuartzPluginData[],
   content: ProcessedContent[],
   locale: keyof typeof TRANSLATIONS,
 ): [Set<string>, Record<string, ProcessedContent>] {
+  // Only create tag pages for tags that appear on at least one non-citation page.
+  // Citation stub pages (under citations/) carry many generic tags that are not
+  // useful for navigation and would generate thousands of empty tag pages.
+  const nonCitationFiles = allFiles.filter((data) => !data.slug?.startsWith("citations/"))
   const tags: Set<string> = new Set(
-    allFiles.flatMap((data) => data.frontmatter?.tags ?? []).flatMap(getAllSegmentPrefixes),
+    nonCitationFiles.flatMap((data) => data.frontmatter?.tags ?? []).flatMap(getAllSegmentPrefixes),
   )
 
   // add base tag
@@ -38,7 +52,7 @@ function computeTagInfo(
       return [
         tag,
         defaultProcessedContent({
-          slug: joinSegments("tags", tag) as FullSlug,
+          slug: joinSegments("tags", safeTagSlug(tag)) as FullSlug,
           frontmatter: { title, tags: [] },
         }),
       ]
@@ -70,7 +84,7 @@ async function processTagPage(
   opts: FullPageLayout,
   resources: StaticResources,
 ) {
-  const slug = joinSegments("tags", tag) as FullSlug
+  const slug = joinSegments("tags", safeTagSlug(tag)) as FullSlug
   const [tree, file] = tagContent
   const cfg = ctx.cfg.configuration
   const externalResources = pageResources(pathToRoot(slug), resources)

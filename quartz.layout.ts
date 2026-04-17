@@ -64,7 +64,7 @@ export const defaultContentPageLayout: PageLayout = {
       localGraph: {
         drag: true,
         zoom: true,
-        depth: 2,
+        depth: 1, // Reduced from 2: with 22K pages, depth 2 can pull in too many citation nodes
         scale: 1.1,
         repelForce: 0.5,
         centerForce: 0.3,
@@ -73,19 +73,22 @@ export const defaultContentPageLayout: PageLayout = {
         opacityScale: 1,
         removeTags: [],
         showTags: false,
+        focusOnHover: true,
       },
       globalGraph: {
         drag: true,
         zoom: true,
-        depth: -1,
+        depth: 2, // Changed from -1 (all pages): 22K nodes would crash the browser
         scale: 0.9,
-        repelForce: 1,
+        repelForce: 0.5,
         centerForce: 0.3,
         linkDistance: 30,
         fontSize: 0.6,
         opacityScale: 1,
         removeTags: [],
         showTags: false,
+        focusOnHover: true,
+        enableRadial: true,
       },
     }),
     Component.DesktopOnly(Component.TableOfContents()),
