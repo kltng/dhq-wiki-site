@@ -76,8 +76,7 @@ const config: QuartzConfig = {
       Plugin.ComponentResources(),
       Plugin.ContentPage(),
       Plugin.FolderPage(),
-      // TagPage disabled — some DHQ articles have very long tag strings causing ENAMETOOLONG
-      // Plugin.TagPage(),
+      Plugin.TagPage(),
       Plugin.ContentIndex({
         enableSiteMap: true,
         enableRSS: true,
@@ -86,8 +85,6 @@ const config: QuartzConfig = {
       Plugin.Static(),
       Plugin.Favicon(),
       Plugin.NotFoundPage(),
-      // CustomOgImages is slow for 900+ pages, comment out
-      // Plugin.CustomOgImages(),
     ],
   },
 }

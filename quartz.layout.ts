@@ -38,7 +38,33 @@ export const defaultContentPageLayout: PageLayout = {
         { Component: Component.ReaderMode() },
       ],
     }),
-    Component.Explorer(),
+    Component.Explorer({
+      title: "DHQ Wiki",
+      folderDefaultState: "collapsed",
+      folderClickBehavior: "collapse",
+      filterFn: (node) => {
+        // Hide individual article files from Explorer (too many)
+        // Only show folders and non-article files
+        const slug = node.file?.slug
+        if (slug && slug.startsWith("articles/")) {
+          return false
+        }
+        return true
+      },
+      sortFn: (a, b) => {
+        // Sort folders first, then alphabetically
+        if ((!a.file) !== (!b.file)) {
+          return a.file ? 1 : -1
+        }
+        return a.displayName.localeCompare(b.displayName)
+      },
+      mapFn: (node) => {
+        // Don't show file extensions
+        if (node.file) {
+          node.displayName = node.displayName.replace(/\.md$/, "")
+        }
+      },
+    }),
   ],
   right: [
     Component.Graph({
@@ -53,7 +79,7 @@ export const defaultContentPageLayout: PageLayout = {
         fontSize: 0.6,
         opacityScale: 1,
         removeTags: [],
-        showTags: true,
+        showTags: false,
       },
       globalGraph: {
         drag: true,
@@ -66,7 +92,7 @@ export const defaultContentPageLayout: PageLayout = {
         fontSize: 0.6,
         opacityScale: 1,
         removeTags: [],
-        showTags: true,
+        showTags: false,
       },
     }),
     Component.DesktopOnly(Component.TableOfContents()),
@@ -74,7 +100,7 @@ export const defaultContentPageLayout: PageLayout = {
     Component.RecentNotes({
       title: "Recent Articles",
       limit: 5,
-      showTags: true,
+      showTags: false,
     }),
   ],
 }
@@ -94,7 +120,24 @@ export const defaultListPageLayout: PageLayout = {
         { Component: Component.Darkmode() },
       ],
     }),
-    Component.Explorer(),
+    Component.Explorer({
+      title: "DHQ Wiki",
+      folderDefaultState: "collapsed",
+      folderClickBehavior: "collapse",
+      filterFn: (node) => {
+        const slug = node.file?.slug
+        if (slug && slug.startsWith("articles/")) {
+          return false
+        }
+        return true
+      },
+      sortFn: (a, b) => {
+        if ((!a.file) !== (!b.file)) {
+          return a.file ? 1 : -1
+        }
+        return a.displayName.localeCompare(b.displayName)
+      },
+    }),
   ],
   right: [],
 }
