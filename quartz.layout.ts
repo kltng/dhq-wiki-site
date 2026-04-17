@@ -43,26 +43,19 @@ export const defaultContentPageLayout: PageLayout = {
       folderDefaultState: "collapsed",
       folderClickBehavior: "collapse",
       filterFn: (node) => {
-        // Hide individual article files from Explorer (too many)
-        // Only show folders and non-article files
-        const slug = node.file?.slug
-        if (slug && slug.startsWith("articles/")) {
+        // Hide individual article files from Explorer sidebar (864 is too many)
+        // Only show folders and non-article content
+        if (!node.isFolder && node.slug.startsWith("articles/")) {
           return false
         }
         return true
       },
       sortFn: (a, b) => {
-        // Sort folders first, then alphabetically
-        if ((!a.file) !== (!b.file)) {
-          return a.file ? 1 : -1
+        // Folders first, then alphabetical
+        if (a.isFolder !== b.isFolder) {
+          return a.isFolder ? -1 : 1
         }
         return a.displayName.localeCompare(b.displayName)
-      },
-      mapFn: (node) => {
-        // Don't show file extensions
-        if (node.file) {
-          node.displayName = node.displayName.replace(/\.md$/, "")
-        }
       },
     }),
   ],
@@ -125,15 +118,14 @@ export const defaultListPageLayout: PageLayout = {
       folderDefaultState: "collapsed",
       folderClickBehavior: "collapse",
       filterFn: (node) => {
-        const slug = node.file?.slug
-        if (slug && slug.startsWith("articles/")) {
+        if (!node.isFolder && node.slug.startsWith("articles/")) {
           return false
         }
         return true
       },
       sortFn: (a, b) => {
-        if ((!a.file) !== (!b.file)) {
-          return a.file ? 1 : -1
+        if (a.isFolder !== b.isFolder) {
+          return a.isFolder ? -1 : 1
         }
         return a.displayName.localeCompare(b.displayName)
       },
