@@ -76,7 +76,7 @@ const config: QuartzConfig = {
       Plugin.ComponentResources(),
       Plugin.ContentPage(),
       Plugin.FolderPage(),
-      Plugin.TagPage(),
+      // Plugin.TagPage(), // Disabled: 21K citations create tags that exceed filesystem filename limits (ENAMETOOLONG)
       Plugin.ContentIndex({
         enableSiteMap: true,
         enableRSS: true,

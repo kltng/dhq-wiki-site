@@ -1,0 +1,19 @@
+---
+title: "Bradley 2008"
+author: "Bradley"
+year: "2008"
+type: "project"
+url: "http://journals.tdl.org/jodi/article/view/209/198"
+slug: "Bradley 2008"
+---
+
+# Bradley 2008
+
+Bradley, J. Pliny: A Model for Digital Support of Scholarship. Journal of Digital Information, 9:26 (2008), http://journals.tdl.org/jodi/article/view/209/198.
+
+## Cited in
+
+- [[000023]]
+- [[000121]]
+- [[000279]]
+- [[000547]]

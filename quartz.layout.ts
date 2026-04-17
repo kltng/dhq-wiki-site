@@ -43,9 +43,9 @@ export const defaultContentPageLayout: PageLayout = {
       folderDefaultState: "collapsed",
       folderClickBehavior: "collapse",
       filterFn: (node) => {
-        // Hide individual article files from Explorer sidebar (864 is too many)
-        // Only show folders and non-article content
-        if (!node.isFolder && node.slug.startsWith("articles/")) {
+        // Hide individual article and citation files from Explorer sidebar
+        // (864 articles + 21K citations would overwhelm navigation)
+        if (!node.isFolder && (node.slug.startsWith("articles/") || node.slug.startsWith("citations/"))) {
           return false
         }
         return true
@@ -118,7 +118,7 @@ export const defaultListPageLayout: PageLayout = {
       folderDefaultState: "collapsed",
       folderClickBehavior: "collapse",
       filterFn: (node) => {
-        if (!node.isFolder && node.slug.startsWith("articles/")) {
+        if (!node.isFolder && (node.slug.startsWith("articles/") || node.slug.startsWith("citations/"))) {
           return false
         }
         return true
